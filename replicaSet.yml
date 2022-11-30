@@ -1,0 +1,25 @@
+apiVersion: apps/v1 #the API version that implement the data from it
+kind: ReplicaSet
+metadata: # المعلومات المخصصة للـكيند
+  name: myapp-ReplicaSet # the name of the resource
+  labels: # labels that be unique this object
+    app: myapp
+    function: front-end
+spec: # Desire state of resource
+  replicas: 3
+  selector: #what object you want to connect
+    matchLabels: # matches the labels specified under it from template.metadata.labels
+      function: front-end
+  template: #this is view of objects under ReplicationController like pods,
+  # all data from metadata to spec in pod will move under template
+  # also if one of object fail the template is the spec and desire for the creation
+    metadata: # المعلومات المخصصة للـكيند غالبأ البود
+      name: myapp # the name of the resource
+      labels: # labels that be unique this object
+        function: front-end
+    spec: # Desire state of resource
+      containers:
+      - name: myapp
+        image: <Image>
+
+

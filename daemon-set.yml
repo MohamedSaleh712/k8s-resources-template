@@ -1,0 +1,21 @@
+apiVersion: apps/v1 #the API version that implement the data from it
+kind: DaemonSet
+metadata: # المعلومات المخصصة للـكيند
+  name: monitoring-daemon # the name of the resource
+  labels: # labels that be unique this object
+    app: myapp
+    function: front-end
+spec: # Desire state of resource
+  selector: #what object you want to connect
+    matchLabels: # matches the labels specified under it from template.metadata.labels
+      app: monitoring-daemon
+  template: #this is view of objects under ReplicationController like pods
+    metadata: # المعلومات المخصصة للـكيند غالبأ البود
+      labels: # labels that be unique this object
+        app: monitoring-daemon
+    spec: # Desire state of resource
+      containers:
+      - name: monitoring-daemon
+        image: monitoring-daemon
+
+

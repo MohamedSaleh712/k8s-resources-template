@@ -1,0 +1,73 @@
+apiVersion: v1 #the API version that implement the data from it
+kind: Pod #the type or type
+metadata: # المعلومات المخصصة للـكيند
+  name: myapp # the name of the resource
+  namespace: dev
+  labels: # labels that be unique this object
+    name: myapp
+spec: # Desire state of resource
+  containers: #*
+  - name: myapp
+    image: <Image>
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "1000m"
+      requests:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: <Port>
+    command: ["sleep"] # eqaul to ENTRYPOINT in docker
+    args: ["10"] # equal to CMD in docker
+    #command: must be string
+    #  - "sleep"
+    #  - "1200"
+    env:
+      - name: APP_COLOR
+        value: blue
+      - name: username
+        valueFrom:
+          configMapKeyRef:
+            name: app-config #name of the configMap
+            key: APP_COLOR
+      - name: password
+        valueFrom:
+          secretKeyRef
+    envFrom:
+    - configMapRef:
+        name: app-config #name of the configMap
+    envFrom:
+    - secretRef:
+        name: app-secret #name of the secret
+
+  restartpolicy: Always #=> defualt is "Always", "Never" & "OnFailure"`
+  nodeName: node02 #manually scheduling in creation time only
+  tolerations:
+  - key: "app"
+    operator: "Equal"
+    value: "blue"
+    effect: "NoSchedule" #NoSchedule, PreferNoSchedule and NoExecute
+
+
+  nodeSelector: # one of node selector simple way
+    size: large #this labels
+  affinity: # one of node selector in complix way
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        #Available
+        #requiredDuringSchedulingIgnoredDuringExecution
+        #preferredDuringSchedulingIgnoredDuringExecution
+        #
+        #Planned
+        #requiredDuringSchedulingRequiredDuringExecution
+        #preferredDuringSchedulingRequiredDuringExecution
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: size
+                operator: NotIn #In, NotIn and Exists(dont need value and = NotIn)
+                values:
+                  - Small
+                  - medium
+
+  schedulerName: my-custom-scheduler
